@@ -2,8 +2,16 @@
 
 EXIT_CODE=0
 
+# Check required commands
+for cmd in systemctl journalctl; do
+  if ! command -v "$cmd" &>/dev/null; then
+    echo "❌ Required command '$cmd' not found. Exiting"
+    exit 2
+  fi
+done
+
 # Check for failed systemd services
-echo "=== Checking for failed systemd services ==="
+echo "=== $(date): Checking for failed systemd services ==="
 FAILED_SERVICES=$(systemctl --failed --no-legend)
 
 if [[ -n "$FAILED_SERVICES" ]]; then
@@ -18,18 +26,15 @@ echo ""
 
 # Check journal for alerts, critical, errors, and for the current boot
 # To add in warnings change 0..3 to 0..4
-echo "=== Checking journal for ALERT, CRIT,  and ERR, messages (current boot) ==="
-JOURNAL_OUTPUT=$(journalctl -p 0..3 -b --no-pager)
+echo "=== $(date): Checking journal for ALERT, CRIT, and ERR messages (current boot) ==="
+JOURNAL_OUTPUT=$(journalctl -p 0..3 -b -q --no-pager)
 
-# Strip whitespace for comaprison
-JOURNAL_OUTPUT_STRIPPED=$(echo "$JOURNAL_OUTPUT" | xargs)
-
-if [[ -n "$JOURNAL_OUTPUT" && "$JOURNAL_OUTPUT_STRIPPED" != "-- No entries --" ]]; then
+if [[ -n "$JOURNAL_OUTPUT" ]]; then
   echo "⚠️  Issues found in journal:"
   echo "$JOURNAL_OUTPUT"
   EXIT_CODE=1
 else
-  echo "✅ No alerts, critical errors, or warnings in journal."
+  echo "✅ No alerts, or critical errors."
 fi
 
 echo ""
