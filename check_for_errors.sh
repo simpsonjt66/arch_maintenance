@@ -19,7 +19,7 @@ if [[ -n "$FAILED_SERVICES" ]]; then
   echo "$FAILED_SERVICES"
   EXIT_CODE=1
 else
-  echo "✅ No failed services."
+  echo -e "\e[1;32m ✅ No failed services. \e[0m"
 fi
 
 echo ""
@@ -34,7 +34,7 @@ if [[ -n "$JOURNAL_OUTPUT" ]]; then
   echo "$JOURNAL_OUTPUT"
   EXIT_CODE=1
 else
-  echo "✅ No alerts, or critical errors."
+  echo -e "\e[1;32m ✅ No alerts, or critical errors. \e[0m"
 fi
 
 echo ""
