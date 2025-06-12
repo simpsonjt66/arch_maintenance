@@ -25,7 +25,7 @@ EOF
 }
 
 version() {
-  printf "%s %s\n" "$myname" "$myver"
+  printf "%s %s\n" "$(basename "$0")" "$myver"
 }
 
 # Check required commands
@@ -40,6 +40,8 @@ check_for_commands() {
 
 # Check for failed systemd services
 check_for_errors() {
+
+  check_for_commands
 
   if [[ -t 2 && $USE_COLOR != "n" ]]; then
     colorize
