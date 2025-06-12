@@ -6,16 +6,15 @@ LOG_LEVEL="0..3"
 USE_COLOR='y'
 QUIET=0
 
-declare -r myname='pac_update'
 declare -r myver='0.1'
 
-source "./message.sh"
+source "$(dirname "$0")/message.sh"
 
 usage() {
   cat <<EOF
-  ${myname} v${myver}
+  $(basename "$0") v${myver}
 
-  Usage: $myname [options]
+  Usage: $(basename "$0") [options]
 
   General Options:
     -i, --include-warnings       Include warnings in Journal log
@@ -96,6 +95,9 @@ while [[ "$1" ]]; do
     ;;
   -q | --quiet)
     QUIET=1
+    ;;
+  -n | --nocolor)
+    USE_COLOR='n'
     ;;
   *)
     echo "Unknown option: $1"
